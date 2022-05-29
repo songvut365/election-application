@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "auth-service"
+		},
+		{
+			"path": "candidate-service"
+		},
+		{
+			"path": "election-service"
+		},
+		{
+			"path": "vote-service"
+		}
+	]
+}
