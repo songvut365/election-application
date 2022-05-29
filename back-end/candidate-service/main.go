@@ -1,13 +1,27 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"candidate-service/config"
+	"candidate-service/handler"
+	"os"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func main() {
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, Candidate Service!")
-	})
+	// Setup
+	config.SetupEnv()
+	config.SetupDatabase()
 
-	app.Listen(":5002")
+	// Router
+	candidate := app.Group("/api/candidate")
+	candidate.Get("/", handler.GetAllCandidate)
+	candidate.Post("/", handler.CreateCandidate)
+	candidate.Get("/:id", handler.GetCandidate)
+	candidate.Put("/:id", handler.UpdateCandidate)
+	candidate.Delete("/:id", handler.DeleteCandidate)
+
+	app.Listen(":" + os.Getenv("PORT"))
 }
