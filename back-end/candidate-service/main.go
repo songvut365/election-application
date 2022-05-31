@@ -16,7 +16,7 @@ func main() {
 	config.SetupDatabase()
 
 	// Router
-	candidate := app.Group("/api/candidate")
+	candidate := app.Group("/api/candidates")
 	candidate.Get("/", handler.GetAllCandidate)
 	candidate.Post("/", handler.CreateCandidate)
 	candidate.Get("/:id", handler.GetCandidate)
