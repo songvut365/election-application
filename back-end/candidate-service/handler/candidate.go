@@ -63,7 +63,16 @@ func DeleteCandidate(c *fiber.Ctx) error {
 	db := config.DB
 
 	id := c.Params("id")
-	db.Delete(&model.Candidate{}, id)
+	var candidate model.Candidate
+
+	err := db.Model(&model.Candidate{}).Where("id = ?", id).First(&candidate).Error
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "candidate not found",
+		})
+	}
+
+	db.Delete(&candidate)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "candidate deleted",
