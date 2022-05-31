@@ -4,11 +4,10 @@ import "gorm.io/gorm"
 
 type Candidate struct {
 	gorm.Model
-	ID         uint   `json:"id" gorm:"primary_key;autoIncrement"`
-	Name       string `json:"name"`
-	DOB        string `json:"dob"`
-	BioLink    string `json:"bioLink" `
-	ImageLink  string `json:"imageLink"`
-	Policy     string `json:"policy"`
-	VotedCount *uint  `json:"votedCount" gorm:"default:0"`
+	Name       string `json:"Name"`
+	DOB        string `json:"DOB"`
+	BioLink    string `json:"BioLink" `
+	ImageLink  string `json:"ImageLink"`
+	Policy     string `json:"Policy"`
+	VotedCount *uint  `json:"VotedCount" gorm:"default:0"`
 }
