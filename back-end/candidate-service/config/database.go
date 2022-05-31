@@ -10,7 +10,7 @@ import (
 )
 
 // Instance
-var db *gorm.DB
+var DB *gorm.DB
 
 func panicOnError(err error, msg string) {
 	if err != nil {
@@ -23,12 +23,12 @@ func SetupDatabase() {
 
 	// Open connection
 	var err error
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	panicOnError(err, "Failed to connect database")
 	log.Println("Connection open to database")
 
 	// Auto migration
-	err = db.AutoMigrate(
+	err = DB.AutoMigrate(
 		&model.Candidate{},
 	)
 	panicOnError(err, "Failed to migrate database")
