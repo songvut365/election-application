@@ -34,5 +34,7 @@ func Export(c *fiber.Ctx) error {
 }
 
 func GetStatus(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusOK).JSON(ElectionStatus)
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"enable": ElectionStatus,
+	})
 }
