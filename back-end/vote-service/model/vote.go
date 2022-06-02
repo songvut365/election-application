@@ -10,3 +10,7 @@ type Vote struct {
 	UpdatedAt   time.Time  `json:"UpdatedAt"`
 	DeletedAt   *time.Time `json:"DeletedAt"`
 }
+
+type ElectionStatus struct {
+	Enable bool `json:"enable"`
+}
