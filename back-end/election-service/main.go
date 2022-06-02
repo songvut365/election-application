@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/websocket/v2"
 )
 
@@ -14,6 +15,7 @@ var ElectionStatus = false
 
 func main() {
 	app := fiber.New()
+	app.Use(logger.New())
 
 	// Setup
 	config.SetupEnv()
