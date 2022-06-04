@@ -2,12 +2,28 @@ package handler
 
 import (
 	"election-service/model"
+	"encoding/json"
+	"fmt"
+	"net/http"
 	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 var ElectionStatus bool
+
+func httpRequest(url string, receiver interface{}) error {
+	client := &http.Client{Timeout: 10 * time.Second}
+
+	request, err := client.Get(url)
+	if err != nil {
+		return err
+	}
+	defer request.Body.Close()
+
+	return json.NewDecoder(request.Body).Decode(receiver)
+}
 
 func Toggle(c *fiber.Ctx) error {
 	var input model.ToggleInput
@@ -26,7 +42,32 @@ func Count(c *fiber.Ctx) error {
 }
 
 func Result(c *fiber.Ctx) error {
-	return c.SendString("Election Result")
+	// Get all candidate
+	var candidates []model.ResultCandidate
+	httpRequest("http://localhost:5002/api/candidates", &candidates)
+
+	// Get all vote
+	var count int
+	httpRequest("http://localhost:5004/api/vote/count", &count)
+
+	// Calculate percentage
+	var resultCandidate []model.ResultCandidate
+
+	for _, candidate := range candidates {
+		var stringPercentage string
+
+		if count == 0 {
+			stringPercentage = "0%"
+		} else {
+			percentage := (float64(*candidate.VotedCount) / float64(count)) * 100
+			stringPercentage = fmt.Sprintf("%.2f", percentage) + "%"
+		}
+		candidate.Percentage = &stringPercentage
+
+		resultCandidate = append(resultCandidate, candidate)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(resultCandidate)
 }
 
 func Export(c *fiber.Ctx) error {
