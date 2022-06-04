@@ -22,5 +22,7 @@ func main() {
 	vote.Post("/status", handler.CheckVoteStatus)
 	vote.Post("/", handler.Vote)
 
+	vote.Get("/count", handler.GetAllVoteCount)
+
 	app.Listen(":" + os.Getenv("PORT"))
 }

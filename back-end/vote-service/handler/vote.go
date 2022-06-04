@@ -90,3 +90,11 @@ func Vote(c *fiber.Ctx) error {
 		"status": "ok",
 	})
 }
+
+func GetAllVoteCount(c *fiber.Ctx) error {
+	db := config.MI.DB.Collection(os.Getenv("MONGODB_COLLECTION"))
+
+	allVoteCount, _ := db.EstimatedDocumentCount(c.Context())
+
+	return c.Status(fiber.StatusOK).JSON(allVoteCount)
+}
