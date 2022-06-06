@@ -7,6 +7,7 @@ import (
 	"time"
 	"vote-service/config"
 	"vote-service/model"
+	"vote-service/rabbitmq"
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
@@ -43,6 +44,7 @@ func CheckVoteStatus(c *fiber.Ctx) error {
 		})
 	}
 
+	// Success
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"status": true,
 	})
@@ -85,7 +87,16 @@ func Vote(c *fiber.Ctx) error {
 	db.InsertOne(c.Context(), input)
 
 	// Update candidate voted count (RabbitMQ)
+	body, err := json.Marshal(input)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Can not publish vote result",
+		})
+	}
+	rabbitmq.PublishVoteMessage(string(body))
 
+	// Success
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"status": "ok",
 	})
