@@ -3,6 +3,7 @@ package main
 import (
 	"candidate-service/config"
 	"candidate-service/handler"
+	"candidate-service/rabbitmq"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -24,6 +25,9 @@ func main() {
 	candidate.Get("/:id", handler.GetCandidate)
 	candidate.Put("/:id", handler.UpdateCandidate)
 	candidate.Delete("/:id", handler.DeleteCandidate)
+
+	// RabbitMQ
+	go rabbitmq.ReceiveVote()
 
 	app.Listen(":" + os.Getenv("PORT"))
 }
