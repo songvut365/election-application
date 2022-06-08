@@ -37,10 +37,10 @@ func ReceiveVote() {
 	failOnError(err, "Failed to declare an exchange")
 
 	queue, err := channel.QueueDeclare(
-		"vote", // queue name
-		true,   // durable
-		false,  // delete when unused
-		false,  // exclusive
+		"update_vote_count", // queue name
+		true,                // durable
+		false,               // delete when unused
+		false,               // exclusive
 		false,
 		nil,
 	)
