@@ -26,6 +26,7 @@ func httpRequest(url string, receiver interface{}) error {
 }
 
 func Toggle(c *fiber.Ctx) error {
+	// Parser
 	var input model.ToggleInput
 	c.BodyParser(&input)
 
@@ -38,7 +39,11 @@ func Toggle(c *fiber.Ctx) error {
 }
 
 func Count(c *fiber.Ctx) error {
-	return c.SendString("Election Count")
+	// Get all candidate
+	var counts []model.Count
+	httpRequest("http://localhost:5002/api/candidates", &counts)
+
+	return c.Status(fiber.StatusOK).JSON(counts)
 }
 
 func Result(c *fiber.Ctx) error {
