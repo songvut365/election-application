@@ -3,6 +3,7 @@ package main
 import (
 	"election-service/config"
 	"election-service/handler"
+	"election-service/rabbitmq"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,7 +12,7 @@ import (
 )
 
 // Instance
-var ElectionStatus = false
+var ElectionStatus = true
 
 func main() {
 	app := fiber.New()
@@ -41,6 +42,9 @@ func main() {
 	})
 	ws.Get("/", websocket.New(handler.AllCandidateVoteStream))
 	ws.Get("/:id", websocket.New(handler.CandidateVoteStream))
+
+	// RabbitMQ
+	go rabbitmq.ReceiveVote()
 
 	app.Listen(":" + os.Getenv("PORT"))
 }
