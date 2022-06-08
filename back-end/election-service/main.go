@@ -41,7 +41,7 @@ func main() {
 		return fiber.ErrUpgradeRequired
 	})
 	ws.Get("/", websocket.New(handler.AllCandidateVoteStream))
-	ws.Get("/:id", websocket.New(handler.CandidateVoteStream))
+	ws.Get("/:candidateId", websocket.New(handler.CandidateVoteStream))
 
 	// RabbitMQ
 	go rabbitmq.ReceiveVote()
