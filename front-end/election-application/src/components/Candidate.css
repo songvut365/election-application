@@ -1,0 +1,77 @@
+.candidate {
+  margin: 2rem;
+  padding: 1rem;
+  border: 1px solid black;
+  height: 500px;
+}
+
+.imageBox {
+  position: relative;
+}
+
+.detailBox {
+  display: flex;
+  justify-content: space-between;
+  align-content: space-between;
+}
+
+.candidateImage {
+  width: 100%;
+  height: 15rem;
+  object-fit: cover;
+  object-position: top;
+}
+
+.candidateId {
+  position: absolute;
+  padding: 0 1rem 0.5rem 1rem;
+  margin: 0;
+  top: 0;
+  right: 0;
+  background-color: lightgray;
+}
+
+.infoBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.candidateName, .candidateAge, .candidateVotedCount, .candidateVoteLabel {
+  padding: 0;
+  margin: 0;
+}
+
+.candidateAge {
+  font-size: 0.9rem;
+  color: gray;
+}
+
+.candidatePolicy {
+  font-style: italic;
+}
+
+.voteButton {
+  width: 120px;
+  height: 35px;
+  border: none;
+  background-color: rgb(80, 48, 167);
+  color: white;
+  border-radius: 4px;
+}
+
+.voteButton:hover {
+  background-color: rgb(110, 74, 209);
+  cursor: pointer;
+}
+
+.voteButton:active {
+  background-color: rgb(56, 34, 116);
+  cursor: pointer;
+}
+
+@media screen and (min-width: 400px) {
+  .candidate {
+    width: 300px;
+  }
+}
