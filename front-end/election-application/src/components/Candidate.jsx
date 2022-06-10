@@ -1,5 +1,6 @@
 import React from 'react';
-import './Candidate.css';
+
+import Button from "./Button";
 
 function ageFromDate(birthDate) {
   let birthYear = birthDate.split(",")[1]
@@ -31,27 +32,29 @@ export default function Candidate() {
   }
 
   return (
-    <div className='candidate'>
-      <div className='imageBox'>
-        <img src={candidate.imageLink} className="candidateImage" />
-        <h1 className="candidateId">{candidate.id}</h1>
+    <div className='max-w-sm rounded-lg shadow-lg p-4'>
+      <div className='relative'>
+        <img src={candidate.imageLink} className="w-full h-96 object-cover object-top rounded-lg shadow-md" />
+        <h1 className="absolute top-0 right-0 px-4 py-2 bg-gray-200 text-5xl font-bold rounded-tr-lg">
+          {candidate.id}
+        </h1>
       </div>
 
-      <div className='detailBox'>
-        <div className='infoBox'>
-          <h3 className='candidateName'>{candidate.name}</h3>
-          <p className='candidateAge'>{ageFromDate(candidate.dob)} yrs</p>
+      <div className='flex justify-between p-4'>
+        <div>
+          <h3 className='font-bold text-lg'>{candidate.name}</h3>
+          <p className='text-xs font-bold text-gray-400'>{ageFromDate(candidate.dob)} yrs</p>
         </div>
 
-        <div className='voteBox'>
-          <h2 className='candidateVotedCount'>{formatVotedCount(candidate.votedCount)}</h2>
-          <p className='candidateVoteLabel'>votes</p>
+        <div>
+          <h2 className='font-bold text-xl'>{formatVotedCount(candidate.votedCount)}</h2>
+          <p className='text-sm'>votes</p>
         </div>
       </div>
       
-      <h2 className='candidatePolicy'>" {candidate.policy} "</h2>
+      <h2 className='text-2xl p-4'>" {candidate.policy} "</h2>
 
-      <button className='voteButton'>VOTE</button>
+      <Button>VOTE</Button>
     </div>
   )
 }
