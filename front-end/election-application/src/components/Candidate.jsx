@@ -23,7 +23,7 @@ function formatVotedCount(votedCount) {
 export default function Candidate(props) {
   let candidate = props.candidate;
   return (
-    <div className='max-w-sm rounded-lg shadow-lg p-4 bg-white relative flex flex-col justify-between'>
+    <div className='max-w-sm rounded-lg shadow-lg mx-4 p-4 bg-white relative flex flex-col justify-between'>
       <div className='relative'>
         <div className="hover:scale-105">
           <img src={candidate.ImageLink} 
@@ -49,14 +49,24 @@ export default function Candidate(props) {
         <h2 className='text-2xl p-4 mb-4'>" {candidate.Policy} "</h2>
       </div>
 
-      {props.electionStatus && 
+      {props.electionStatus ? (
         <Button 
           method={props.openVoteBox}
           bgColor="blue" textColor="white"
         >  
           VOTE
         </Button>
-      }
+      ) : (
+        <div className="my-4 w-full bg-gray-200 h-8 relative rounded-sm">
+          <div className="bg-blue-600 h-8 absolute z-10 rounded-sm border-2 box-border" style={{ width: `${candidate.Percentage}`}}>
+            <p className='w-full h-8 absolute z-20 text-center pl-2 pt-0.5 font-bold text-white '>
+                {candidate.Percentage}
+            </p>
+          </div>
+        </div>
+      )}
+
+      
     </div>
   )
 }
