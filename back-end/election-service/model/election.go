@@ -10,6 +10,7 @@ type Count struct {
 }
 
 type ResultCandidate struct {
+	ID         int     `json:"ID"`
 	Name       string  `json:"Name"`
 	DOB        string  `json:"DOB"`
 	BioLink    string  `json:"BioLink" `
