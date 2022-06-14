@@ -119,8 +119,8 @@ func AllCandidateVoteStream(ws *websocket.Conn) {
 	queue, err := channel.QueueDeclare(
 		"",    // queue name
 		true,  // durable
-		false, // delete when unused
-		true,  // exclusive
+		true,  // delete when unused
+		false, // exclusive
 		false,
 		nil,
 	)
@@ -169,6 +169,7 @@ func AllCandidateVoteStream(ws *websocket.Conn) {
 			err = ws.WriteJSON(count)
 			if err != nil {
 				log.Fatalf("%s: %s", "Failed to write json", err)
+				break
 			}
 		}
 	}()
@@ -179,7 +180,8 @@ func AllCandidateVoteStream(ws *websocket.Conn) {
 func getCandidate(id string) model.Count {
 	// Get all candidate
 	var count model.Count
-	httpRequest("http://localhost:5002/api/candidates/"+id, &count)
+	err := httpRequest("http://localhost:5002/api/candidates/"+id, &count)
+	failOnError(err, "Failed to get candidate")
 
 	return count
 }
