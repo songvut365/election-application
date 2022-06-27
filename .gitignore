@@ -1,1 +1,2 @@
-*.drawio
+*.drawio*
+docker/db/

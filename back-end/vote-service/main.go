@@ -1,13 +1,30 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"os"
+	"vote-service/config"
+	"vote-service/handler"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+)
 
 func main() {
 	app := fiber.New()
+	app.Use(logger.New())
+	app.Use(cors.New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, Vote Service!")
-	})
+	// Setup
+	config.SetupEnv()
+	config.SetupDatabase()
 
-	app.Listen(":5004")
+	// Router
+	vote := app.Group("/api/vote")
+	vote.Post("/status", handler.CheckVoteStatus)
+	vote.Post("/", handler.Vote)
+
+	vote.Get("/count", handler.GetAllVoteCount)
+
+	app.Listen(":" + os.Getenv("PORT"))
 }

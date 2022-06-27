@@ -1,13 +1,35 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"candidate-service/config"
+	"candidate-service/handler"
+	"candidate-service/rabbitmq"
+	"os"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+)
 
 func main() {
 	app := fiber.New()
+	app.Use(logger.New())
+	app.Use(cors.New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, Candidate Service!")
-	})
+	// Setup
+	config.SetupEnv()
+	config.SetupDatabase()
 
-	app.Listen(":5002")
+	// Router
+	candidate := app.Group("/api/candidates")
+	candidate.Get("/", handler.GetAllCandidate)
+	candidate.Post("/", handler.CreateCandidate)
+	candidate.Get("/:id", handler.GetCandidate)
+	candidate.Put("/:id", handler.UpdateCandidate)
+	candidate.Delete("/:id", handler.DeleteCandidate)
+
+	// RabbitMQ
+	go rabbitmq.ReceiveVote()
+
+	app.Listen(":" + os.Getenv("PORT"))
 }
