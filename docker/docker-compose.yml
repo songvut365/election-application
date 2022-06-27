@@ -1,0 +1,99 @@
+version: '3'
+services:
+    candidate:
+        container_name: candidate-container
+        build:
+            context: ../back-end/candidate-service/
+            dockerfile: Dockerfile
+        command: /bin/sh -c "go run main.go"
+        stdin_open: true
+        tty: true
+        volumes:
+            - .:/app
+        ports:
+            - 5002:5002
+        environment:
+            PORT: 5002
+            DSN: host=localhost user=postgres password=1234 dbname=election port=5432 sslmode=disable TimeZone=Asia/Bangkok
+            AMQP_URL: amqp://guest:guest@localhost:5672/
+        depends_on:
+            - "candidate_database"
+
+    election:
+        container_name: election-container
+        build:
+            context: ../back-end/election-service/
+            dockerfile: Dockerfile
+        command: /bin/sh -c "go run main.go"
+        stdin_open: true
+        tty: true
+        volumes:
+            - .:/app
+        ports:
+            - 5003:5003
+        environment:
+            PORT: 5003
+            CSV_FILE: public\export.csv
+            AMQP_URL: amqp://guest:guest@localhost:5672/
+
+    vote:
+        container_name: vote-container
+        build:
+            context: ../back-end/vote-service/
+            dockerfile: Dockerfile
+        command: /bin/sh -c "go run main.go"
+        stdin_open: true
+        tty: true
+        volumes:
+            - .:/app
+        ports:
+            - 5004:5004
+        environment:
+            PORT: 5004
+            CSV_FILE: public\export.csv
+            MONGODB_URI: mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false
+            MONGODB_DATABASE: election
+            MONGODB_COLLECTION: votes
+            AMQP_URL: amqp://guest:guest@localhost:5672/
+        depends_on:
+            - "vote_database"
+    
+    candidate_database:
+        container_name: candidate-database
+        image: postgres:14.3-alpine
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=1234
+        volumes:
+            - db:/var/lib/postgresql/data
+        
+    vote_database:
+        container_name: vote-database
+        image: mongo:4.4
+        ports:
+            - 27017:27017
+        environment:
+          - MONGO_INITDB_ROOT_USERNAME=root
+          - MONGO_INITDB_ROOT_PASSWORD=1234
+          - MONGO_INITDB_DATABASE=election
+          - MONGO_INITDB_USERNAME=mongo
+          - MONGO_INITDB_PASSWORD=1234
+        volumes:
+            - ./init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
+            - ./db:/data/db
+        
+    rabbitmq:
+        image:  rabbitmq:3-management-alpine
+        container_name: rabbitmq-container
+        ports:
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+            - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+
+volumes:
+    db:
+        driver: local
