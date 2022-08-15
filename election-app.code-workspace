@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{ "path": "back-end/auth-service" },
+		{ "path": "back-end/candidate-service" },
+		{ "path": "back-end/election-service" },
+		{ "path": "back-end/vote-service" },
+		{ "path": "front-end/election-application" },
+		{ "path": "docker" },
+		{ "path": "documents" }
+	]
+}
